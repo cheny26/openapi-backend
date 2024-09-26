@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: openapi-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: openapi
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/name/**
+server:
+  port: 8082
+
+dubbo:
+  application:
+    name: openapi
+  registry:
+    address: nacos://localhost:8848
+  protocol:
+    name: dubbo
+    port: 20881
