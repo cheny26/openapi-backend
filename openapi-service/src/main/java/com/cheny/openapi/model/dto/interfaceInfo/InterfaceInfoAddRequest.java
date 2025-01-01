@@ -45,6 +45,11 @@ public class InterfaceInfoAddRequest implements Serializable {
      */
     private String responseHeader;
 
+    /**
+     * 消耗积分
+     */
+    private Integer pointsCost;
+
 
     /**
      * 创建人姓名

@@ -26,7 +26,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -51,13 +50,6 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
     private static final List<String> BLACKLIST = Collections.singletonList("0.0.0.1");
     //存放已经使用过的随机数
     HashSet<String> sets = new HashSet<>();
-
-
-    @Bean
-    public GlobalFilter customFilter() {
-        return new CustomGlobalFilter();
-    }
-
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -113,7 +105,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             response.setStatusCode(HttpStatus.FORBIDDEN);
             return response.setComplete();
         }
-        return handleResponse(exchange, chain, interfaceInfo.getId(), invokeUser.getId());
+        log.info("调用的接口id为"+interfaceInfo.getId());
+        return handleResponse(exchange, chain, interfaceInfo.getId(), invokeUser.getId(),interfaceInfo.getPointsCost());
     }
 
     //设置过滤器执行等级
@@ -122,7 +115,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         return -1;
     }
 
-    public Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain, long interFaceInfoId, long userId) {
+    public Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain, long interFaceInfoId, long userId,int pointsCost) {
         try {
             // 获取原始的响应对象
             ServerHttpResponse originalResponse = exchange.getResponse();
@@ -143,7 +136,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                         if (body instanceof Flux) {
                             //调用成功，接口调用次数+1
                             try {
-                                innerUserInterfaceInfoService.invokeCount(interFaceInfoId, userId);
+                                innerUserInterfaceInfoService.invokeCount(interFaceInfoId, userId,pointsCost);
                             } catch (Exception e) {
                                 log.error("invoke error", e);
                             }

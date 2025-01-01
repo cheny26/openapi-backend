@@ -52,6 +52,11 @@ public class InterfaceInfoVO implements Serializable {
     private String responseHeader;
 
     /**
+     * 消耗积分
+     */
+    private Integer pointsCost;
+
+    /**
      * 接口状态（0 关闭 1 开启）
      */
     private Integer status;

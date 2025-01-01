@@ -13,5 +13,5 @@ public interface InnerUserInterfaceInfoService {
      * @param userId
      * @return
      */
-    Boolean invokeCount(long interfaceInfoId, long userId);
+    Boolean invokeCount(long interfaceInfoId, long userId,int pointCost);
 }

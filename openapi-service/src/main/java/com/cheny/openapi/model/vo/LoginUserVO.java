@@ -34,6 +34,11 @@ public class LoginUserVO implements Serializable {
     private String userRole;
 
     /**
+     */
+    private Integer points;
+
+
+    /**
      * 创建时间
      */
     private Date createTime;

@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cheny.openapi.common.api.ErrorCode;
 import com.cheny.openapi.common.exception.BusinessException;
 import com.cheny.openapi.mapper.UserInterfaceInfoMapper;
+import com.cheny.openapi.service.InterfaceInfoService;
 import com.cheny.openapi.service.UserInterfaceInfoService;
 import com.cheny.openapi.common.model.entity.UserInterfaceInfo;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * 用户接口信息服务实现类
@@ -16,6 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoMapper, UserInterfaceInfo>
     implements UserInterfaceInfoService {
+
+    @Resource
+    private InterfaceInfoService interfaceInfoService;
 
     @Override
     public void validUserInterfaceInfo(UserInterfaceInfo userInterfaceInfo, boolean add) {
@@ -35,11 +41,12 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
 
 
     @Override
-    public boolean invokeCount(long interfaceInfoId, long userId) {
+    public boolean invokeCount(long interfaceInfoId, long userId,int pointCost) {
         // 判断
         if (interfaceInfoId <= 0 || userId <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+        //todo 更新交易表
         UpdateWrapper<UserInterfaceInfo> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("interfaceInfoId", interfaceInfoId);
         updateWrapper.eq("userId", userId);

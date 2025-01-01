@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cheny.openapi.common.api.ErrorCode;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import static com.cheny.openapi.common.constant.UserConstant.USER_LOGIN_STATE;
@@ -42,7 +44,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     public static final String SALT = "chen";
 
+
     @Override
+    @Transactional
     public long userRegister(String userName, String userPassword, String checkPassword) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userName, userPassword, checkPassword)) {
@@ -77,6 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setAccessKey("accessKey"+r);
             user.setSecretKey("secretKey"+r);
             user.setUserPassword(encryptPassword);
+            user.setPoints(100);
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");

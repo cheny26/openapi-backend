@@ -53,6 +53,11 @@ public class User implements Serializable {
     private String secretKey;
 
     /**
+     * 积分
+     */
+    private Integer points;
+
+    /**
      * 创建时间
      */
     private Date createTime;
